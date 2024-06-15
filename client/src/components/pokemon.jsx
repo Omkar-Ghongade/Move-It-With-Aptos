@@ -15,14 +15,10 @@ export default function Pokemon() {
   }, []);
 
   return (
-    <div>
+    <div className="p-4" style={{ fontFamily: "'Press Start 2P', cursive" }}>
       {cards.map(card => (
-        <div key={card.id} style={{ marginBottom: '20px' }} className='flex'>
-          {/* <h3>{card.name}</h3> */}
-          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <img src={card.images.small} alt={`${card.name} small`} />
-            {/* <img src={card.images.large} alt={`${card.name} large`} /> */}
-          </div>
+        <div key={card.id} className="flex justify-center mb-4">
+          <img src={card.images.small} alt={`${card.name} small`} className="transform hover:scale-105 transition-transform duration-300" />
         </div>
       ))}
     </div>
