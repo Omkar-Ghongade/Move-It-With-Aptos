@@ -20,14 +20,14 @@ export default function Home() {
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
               <a href="/league" className="hover:underline">League Events</a>
             </nav>
-            <div className="flex items-center bg-black bg-opacity-60 px-4 py-2 rounded-lg ml-6">
-              <span className="text-white mr-2">2.000</span>
+            <div className="flex items-center bg-black bg-opacity-60 px-4 py-2 rounded-lg w-80">
+              <span className="text-white mr-3">2.000</span>
               <img src="/aptoslogo.png" alt="Logo" className="h-10" />
               <button 
                 onClick={handleDisconnect} 
-                className="ml-4 px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-lg transition-colors duration-300"
+                className="ml-4 px-2 py-2 bg-red-500 hover:bg-red-700 text-white rounded-lg transition-colors duration-300"
               >
-                Disconnect
+                Disconnet
               </button>
             </div>
           </div>

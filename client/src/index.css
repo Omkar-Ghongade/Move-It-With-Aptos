@@ -51,8 +51,20 @@
   }
 
   .animate-bounce {
-    animation: bounce 3s infinite; /* Adjust the duration to 3 seconds for a slower bounce */
+    animation: bounce 5s infinite; /* Adjust the duration to 3 seconds for a slower bounce */
   }
 
 
 }
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-fadeIn {
+  animation: fadeIn 2s ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+

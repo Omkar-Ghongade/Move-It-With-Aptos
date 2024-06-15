@@ -40,7 +40,7 @@ export default function Marketplace() {
 
   return (
     <div className="mp-bg-image relative min-h-screen p-4" style={{ fontFamily: "'Press Start 2P', cursive" }}>
-      <div className="fixed top-4 left-4">
+      <div className="flex justify-between items-center mb-4">
         <button
           onClick={() => window.history.back()}
           className="bg-green-800 rounded-full"
@@ -48,8 +48,7 @@ export default function Marketplace() {
         >
           <img src="/bb.png" alt="Back" className="w-16 h-16" />
         </button>
-      </div>
-      <div className="fixed top-4 right-4">
+        <h1 className="text-4xl justify-between font-bold text-center">Market Place</h1>
         <input
           type="text"
           value={searchQuery}
@@ -59,7 +58,7 @@ export default function Marketplace() {
           style={{ fontFamily: "'Press Start 2P', cursive" }}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredCards.map(card => (
           <div key={card.id} className="flex flex-col justify-center items-center p-2">
             <img src={card.images.large} alt={card.name} className="mb-2 transform hover:scale-105 transition-transform duration-300" />
