@@ -4,6 +4,7 @@ export default function Deck() {
   const [ownedCards, setOwnedCards] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCards, setFilteredCards] = useState([]);
+  const [allCards, setAllCards] = useState([]);
 
   useEffect(() => {
     fetch('/response.json')  // Assuming response.json is in the public directory
@@ -13,6 +14,7 @@ export default function Deck() {
         const randomCards = allCards.sort(() => 0.5 - Math.random()).slice(0, 12); // Fetching 12 cards for 4 decks
         setOwnedCards(randomCards);
         setFilteredCards(randomCards);
+        getMyCards();
       })
       .catch(error => {
         console.error("There was an error fetching the owned cards!", error);
@@ -35,6 +37,25 @@ export default function Deck() {
     { id: 4, name: 'Deck 4', cards: filteredCards.slice(9, 12) },
   ];
 
+  const getMyCards = async () => {
+    try {
+      const user = await window.fewcha.account();
+      console.log('User:', user.data.address);
+      const response = await fetch('http://localhost:3000/userstorage/mycards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: user.data.address }),
+      });
+      const data = await response.json();
+      console.log('My Cards:', data);
+      setAllCards(data); // Ensure data.cards is defined
+    } catch (error) {
+      console.error("There was an error fetching the owned cards!", error);
+    }
+  }
+
   return (
     <div className="mp-bg-image relative min-h-screen p-4" style={{ fontFamily: "'Press Start 2P', cursive" }}>
       <div className="flex justify-between items-center mb-4">
@@ -54,6 +75,17 @@ export default function Deck() {
           className="p-2 rounded-lg border-2 border-gray-300"
           style={{ fontFamily: "'Press Start 2P', cursive" }}
         />
+      </div>
+      <div className="p-4">
+        <h2 className="text-left text-2xl font-bold mb-4">All Cards</h2>
+        <div className="flex justify-left space-x-4 flex-wrap">
+          {allCards && allCards.map(card => (
+            <div key={card.id} className="p-2">
+              <img src={card.images.large} alt={card.name} className="w-48 h-auto" />
+              <p className="text-center">{card.name}</p>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="space-y-8">
         {decks.map(deck => (

@@ -7,8 +7,6 @@ export default function Marketplace() {
   const [filteredCards, setFilteredCards] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [userAddress, setUserAddress] = useState('');
-  const [ownedTokens, setOwnedTokens] = useState([]);
   const [ownedUris, setOwnedUris] = useState([]); // New state for URIs
 
   useEffect(() => {
@@ -18,22 +16,48 @@ export default function Marketplace() {
       .then(data => {
         setCards(data.data);
         setFilteredCards(data.data);
+        getMyCards(data.data); // Fetch owned cards and filter them out from the marketplace cards
       })
       .catch(error => {
         console.error("There was an error fetching the cards!", error);
       });
-
-    // Get the user address and owned tokens from Fewcha wallet
   }, []);
 
-  
+  const getMyCards = async (allCards) => {
+    try {
+      const user = await window.fewcha.account();
+      console.log('User:', user.data.address);
+      const response = await fetch('http://localhost:3000/userstorage/mycards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: user.data.address }),
+      });
+      const data = await response.json();
+      console.log('My Cards:', data);
+      const uris = data.map(card => card.images.large); // Assuming each card has a 'uri' property
+      console.log('Owned URIs:', uris);
+      setOwnedUris(uris);
+      filterOwnedCards(uris, allCards);
+    } catch (error) {
+      console.error("There was an error fetching the owned cards!", error);
+    }
+  };
+
+  const filterOwnedCards = (uris, allCards) => {
+    const filtered = allCards.filter(card => !uris.includes(card.images.large));
+    console.log('Filtered cards:', filtered);
+    setFilteredCards(filtered);
+  };
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     if (e.target.value === '') {
-      setFilteredCards(cards);
+      filterOwnedCards(ownedUris, cards);
     } else {
-      setFilteredCards(cards.filter(card => card.name.toLowerCase().includes(e.target.value.toLowerCase())));
+      const filtered = cards.filter(card => card.name.toLowerCase().includes(e.target.value.toLowerCase()) && !ownedUris.includes(card.images.large));
+      setFilteredCards(filtered);
     }
   };
 
@@ -124,7 +148,7 @@ export default function Marketplace() {
   };
 
   const addCard = async () => {
-    try{
+    try {
       const user = await window.fewcha.account();
       console.log('User:', user.data.address);
       const response = await fetch('http://localhost:3000/userstorage/cards', {
@@ -132,12 +156,12 @@ export default function Marketplace() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ address: user.data.address, card: selectedCard}),
+        body: JSON.stringify({ address: user.data.address, card: selectedCard }),
       });
       const data = await response.json();
       console.log('Data:', data);
-    }catch(err){
-        console.log(err);
+    } catch (err) {
+      console.log(err);
     }
   };
 
