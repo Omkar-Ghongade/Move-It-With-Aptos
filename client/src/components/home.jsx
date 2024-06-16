@@ -12,11 +12,11 @@ export default function Home() {
         <header className="w-full text-white flex justify-center pt-0 mt-0 relative">
           <div className="bg-black bg-opacity-60 px-12 py-5 flex justify-between items-center rounded-lg w-full max-w-screen-lg mx-auto">
             <nav className="flex space-x-6 text-lg mr-2" style={{ fontFamily: "'Press Start 2P', cursive" }}>
-              <a href="/deck" className="hover:underline">Cards Deck</a>
+              <a href="/deck" className="hover:underline">Poke Deck</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
               <a href="/marketplace" className="hover:underline">Market Place</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
-              <a href="/arena" className="hover:underline">Battle Arena</a>
+              <a href="/arena" className="hover:underline">Poke Arena</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
               <a href="/pokefortune" className="hover:underline">Poke Fortune</a>
             </nav>
