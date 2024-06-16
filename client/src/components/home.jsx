@@ -11,14 +11,14 @@ export default function Home() {
       <div className="home-bg-image relative min-h-screen flex flex-col justify-between">
         <header className="w-full text-white flex justify-center pt-0 mt-0 relative">
           <div className="bg-black bg-opacity-60 px-12 py-5 flex justify-between items-center rounded-lg w-full max-w-screen-lg mx-auto">
-            <nav className="flex space-x-6 text-lg" style={{ fontFamily: "'Press Start 2P', cursive" }}>
+            <nav className="flex space-x-6 text-lg mr-2" style={{ fontFamily: "'Press Start 2P', cursive" }}>
               <a href="/deck" className="hover:underline">Cards Deck</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
               <a href="/marketplace" className="hover:underline">Market Place</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
               <a href="/arena" className="hover:underline">Battle Arena</a>
               <img src="/pokeball.png" alt="Pokeball" className="h-8 my-auto" /> {/* Increase size */}
-              <a href="/league" className="hover:underline">League Events</a>
+              <a href="/pokefortune" className="hover:underline">Poke Fortune</a>
             </nav>
             <div className="flex items-center bg-black bg-opacity-60 px-4 py-2 rounded-lg w-80">
               <span className="text-white mr-3">2.000</span>

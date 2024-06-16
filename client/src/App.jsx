@@ -4,6 +4,7 @@ import Marketplace from './components/marketplace';
 import Arena from './components/arena';
 import Deck from './components/deck';
 import Login from './components/login';
+import Pokefortune from './components/pokefortune'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/arena" element={<Arena />} />
         <Route path="/deck" element={<Deck />} />
+        <Route path="/pokefortune" element={<Pokefortune/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -106,7 +106,7 @@ function Arena() {
   };
 
   return (
-    <div className="arena-bg-image h-full relative p-4 text-white" style={{ fontFamily: "'Press Start 2P', cursive", overflow: 'hidden' }}>
+    <div className="arena-bg-image h-screen  relative p-4 text-white" style={{ fontFamily: "'Press Start 2P', cursive", overflow: 'hidden' }}>
       <div className="flex">
         {/* Player Deck */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
@@ -139,8 +139,7 @@ function Arena() {
             )}
           </div>
           {/* Battle Log */}
-          <div className="overflow-y-scroll hide-scrollbar border border-white outline outline-offset-2 outline-4 rounded-lg p-4 relative w-full mb-24">
-            <h3 className="absolute left-4 top-0 transform -translate-y-1/2 bg-gray-800 px-2 text-xl">Battle Log</h3>
+          <div className="overflow-y-scroll hide-scrollbar border border-white outline outline-offset-2 outline-4 rounded-lg p-4 relative w-full h-screen mb-24">
             <div className="log text-base">
               {battleLog.map((log, index) => (
                 <p key={index}>{log}</p>
