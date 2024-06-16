@@ -10,7 +10,7 @@ export default function Deck() {
       .then(response => response.json())
       .then(data => {
         const allCards = data.data;
-        const randomCards = allCards.sort(() => 0.5 - Math.random()).slice(0, 6);
+        const randomCards = allCards.sort(() => 0.5 - Math.random()).slice(0, 12); // Fetching 12 cards for 4 decks
         setOwnedCards(randomCards);
         setFilteredCards(randomCards);
       })
@@ -28,6 +28,13 @@ export default function Deck() {
     }
   };
 
+  const decks = [
+    { id: 1, name: 'Deck 1', cards: filteredCards.slice(0, 3) },
+    { id: 2, name: 'Deck 2', cards: filteredCards.slice(3, 6) },
+    { id: 3, name: 'Deck 3', cards: filteredCards.slice(6, 9) },
+    { id: 4, name: 'Deck 4', cards: filteredCards.slice(9, 12) },
+  ];
+
   return (
     <div className="mp-bg-image relative min-h-screen p-4" style={{ fontFamily: "'Press Start 2P', cursive" }}>
       <div className="flex justify-between items-center mb-4">
@@ -38,7 +45,7 @@ export default function Deck() {
         >
           <img src="/bb.png" alt="Back" className="w-16 h-16" />
         </button>
-        <h1 className="text-4xl justify-between font-bold text-center">My Deck</h1>
+        <h1 className="text-4xl font-bold text-center flex-grow">My Deck</h1>
         <input
           type="text"
           value={searchQuery}
@@ -48,10 +55,17 @@ export default function Deck() {
           style={{ fontFamily: "'Press Start 2P', cursive" }}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {filteredCards.map(card => (
-          <div key={card.id} className="flex flex-col justify-center items-center p-2">
-            <img src={card.images.large} alt={card.name} className="mb-2" />
+      <div className="space-y-8">
+        {decks.map(deck => (
+          <div key={deck.id} className="p-4">
+            <h2 className="text-left text-2xl font-bold mb-4">{deck.name}</h2>
+            <div className="flex justify-left space-x-4">
+              {deck.cards.map(card => (
+                <div key={card.id} className="p-2">
+                  <img src={card.images.large} alt={card.name} className="w-96 h-auto" />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
