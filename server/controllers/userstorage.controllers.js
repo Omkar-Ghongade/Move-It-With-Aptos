@@ -6,8 +6,19 @@ export const add_to_deck = async (req, res) => {
         const deck_n=req.body.deck_n;
         const key=req.body.key;
         const user = await userStorage.findOne({address:key})
+        user.decks[deck_n]=deck;
         user.save();
         res.status(200).json(user);
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const get_deck = async (req, res) => {
+    try{
+        const key=req.body.key;
+        const user = await userStorage.findOne({address:key})
+        res.status(200).json(user.decks);
     }catch(err){
         console.log(err);
     }
