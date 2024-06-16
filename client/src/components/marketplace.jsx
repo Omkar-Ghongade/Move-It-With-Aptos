@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Web3 from "@fewcha/web3";
 
 export default function Marketplace() {
   const [cards, setCards] = useState([]);
@@ -6,8 +7,12 @@ export default function Marketplace() {
   const [filteredCards, setFilteredCards] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [userAddress, setUserAddress] = useState('');
+  const [ownedTokens, setOwnedTokens] = useState([]);
+  const [ownedUris, setOwnedUris] = useState([]); // New state for URIs
 
   useEffect(() => {
+    // Fetch the cards data
     fetch('/response.json')  // Assuming response.json is in the public directory
       .then(response => response.json())
       .then(data => {
@@ -17,7 +22,11 @@ export default function Marketplace() {
       .catch(error => {
         console.error("There was an error fetching the cards!", error);
       });
+
+    // Get the user address and owned tokens from Fewcha wallet
   }, []);
+
+  
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -38,9 +47,83 @@ export default function Marketplace() {
     setSelectedCard(null);
   };
 
+  const handleConfirm = async () => {
+    try {
+      const bal = await window.fewcha.getBalance();
+      const userAddress = bal.data.address;
+      const collectionName = 'Pokemons';
+      const tokenName = selectedCard.name;
+      const description = "Adding to Deck";
+      const uri = selectedCard.images.large;
+      console.log('Token URI:', uri);
+
+      // Check if the collection exists, if not create it
+      await window.fewcha.token.createCollection(collectionName, description, uri);
+
+      // Send payment
+      const receiverAddress = '0x3dee99e674c14e4df17f3d1b1e8c23750acb8876bf3180b6e9cc560ed081c656';
+      const amount = 10; // 0.1 APTOS in octas (1 APTOS = 10^8 octas)
+
+      const payload = {
+        type: "entry_function_payload",
+        function: "0x1::coin::transfer",
+        type_arguments: ["0x1::aptos_coin::AptosCoin"],
+        arguments: [receiverAddress, amount],
+      };
+
+      const rawTransaction = await window.fewcha.generateTransaction(payload);
+      console.log('Raw transaction:', rawTransaction);
+      if (rawTransaction.status !== 200) throw new Error('Failed to generate transaction');
+
+      const txnHash = await window.fewcha.signAndSubmitTransaction(rawTransaction.data);
+      if (txnHash.status !== 200) throw new Error('Transaction failed');
+
+      // Create Token
+      const createTokenResponse = await window.fewcha.token.createToken(
+        collectionName,
+        tokenName,
+        description,
+        1,
+        uri,
+        "10000", // max supply (set to 1,000,000 as an example, or any other appropriate value)
+        '0x3dee99e674c14e4df17f3d1b1e8c23750acb8876bf3180b6e9cc560ed081c656', // Royalty payee address
+        10, // Royalty points denominator
+        1 // Royalty points numerator
+      );
+
+      console.log('Create Token Response:', createTokenResponse);
+
+      if (createTokenResponse.status !== 200) throw new Error('Failed to create token');
+
+      // Offer Token to self
+      await window.fewcha.token.offerToken(
+        userAddress, // receiver address (self)
+        userAddress, // creator address (self)
+        collectionName,
+        tokenName,
+        1 // amount
+      );
+
+      // Claim Token
+      await window.fewcha.token.claimToken(
+        userAddress, // sender address (self)
+        userAddress, // creator address (self)
+        collectionName,
+        tokenName
+      );
+
+      closePopup();
+      window.location.reload();
+      // alert('Transaction successful! The NFT should now be visible in your Fewcha profile.');
+    } catch (error) {
+      console.error('Transaction failed!', error);
+      alert('Transaction failed!');
+    }
+  };
+
   return (
     <div className="mp-bg-image relative min-h-screen p-4" style={{ fontFamily: "'Press Start 2P', cursive" }}>
-      <div className="flex justify-between items-center mb-4">
+      <div className="fixed top-4 left-4">
         <button
           onClick={() => window.history.back()}
           className="bg-green-800 rounded-full"
@@ -48,7 +131,8 @@ export default function Marketplace() {
         >
           <img src="/bb.png" alt="Back" className="w-16 h-16" />
         </button>
-        <h1 className="text-4xl justify-between font-bold text-center">Market Place</h1>
+      </div>
+      <div className="fixed top-4 right-4">
         <input
           type="text"
           value={searchQuery}
@@ -58,7 +142,20 @@ export default function Marketplace() {
           style={{ fontFamily: "'Press Start 2P', cursive" }}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold mb-4">Owned Tokens</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ownedUris.map((uri, index) => (
+            <div key={index} className="flex flex-col justify-center items-center p-2">
+              <img src={uri} alt={`Token ${index + 1}`} className="mb-2 transform hover:scale-105 transition-transform duration-300" />
+              <div className="w-full text-center text-xl py-1 px-2 font-bold">{`Token ${index + 1}`}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-16">
         {filteredCards.map(card => (
           <div key={card.id} className="flex flex-col justify-center items-center p-2">
             <img src={card.images.large} alt={card.name} className="mb-2 transform hover:scale-105 transition-transform duration-300" />
@@ -91,7 +188,12 @@ export default function Marketplace() {
                 >
                   Cancel
                 </button>
-                <button className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-700 transition-colors duration-300">Confirm</button>
+                <button
+                  className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-700 transition-colors duration-300"
+                  onClick={handleConfirm}
+                >
+                  Confirm
+                </button>
               </div>
             </div>
           </div>
