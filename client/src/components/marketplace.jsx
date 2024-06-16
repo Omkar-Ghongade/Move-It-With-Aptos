@@ -113,11 +113,31 @@ export default function Marketplace() {
       );
 
       closePopup();
+
+      await addCard();
       window.location.reload();
       // alert('Transaction successful! The NFT should now be visible in your Fewcha profile.');
     } catch (error) {
       console.error('Transaction failed!', error);
       alert('Transaction failed!');
+    }
+  };
+
+  const addCard = async () => {
+    try{
+      const user = await window.fewcha.account();
+      console.log('User:', user.data.address);
+      const response = await fetch('http://localhost:3000/userstorage/cards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: user.data.address, card: selectedCard}),
+      });
+      const data = await response.json();
+      console.log('Data:', data);
+    }catch(err){
+        console.log(err);
     }
   };
 
@@ -141,18 +161,6 @@ export default function Marketplace() {
           className="p-2 rounded-lg border-2 border-gray-300"
           style={{ fontFamily: "'Press Start 2P', cursive" }}
         />
-      </div>
-
-      <div className="mt-16">
-        <h2 className="text-3xl font-bold mb-4">Owned Tokens</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {ownedUris.map((uri, index) => (
-            <div key={index} className="flex flex-col justify-center items-center p-2">
-              <img src={uri} alt={`Token ${index + 1}`} className="mb-2 transform hover:scale-105 transition-transform duration-300" />
-              <div className="w-full text-center text-xl py-1 px-2 font-bold">{`Token ${index + 1}`}</div>
-            </div>
-          ))}
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-16">
