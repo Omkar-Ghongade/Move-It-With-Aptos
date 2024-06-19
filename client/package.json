@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@aptos-labs/ts-sdk": "^1.19.0",
     "@fewcha/web3": "^0.1.38",
+    "aptos": "^1.21.0",
     "axios": "^1.7.2",
     "ethers": "^6.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
