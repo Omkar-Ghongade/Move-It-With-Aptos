@@ -20,6 +20,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install python-docx
+          
+      - name: List repository files
+        run: ls -la
+
 
       - name: Update Word Document
         run: |
