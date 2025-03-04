@@ -4,6 +4,7 @@ from docx import Document
 
 def update_document(file_path, message):
     try:
+        print(f"Opening {file_path} to update with message: {message}")
         doc = Document(file_path)
         doc.add_paragraph(message)
         doc.save(file_path)
@@ -13,7 +14,7 @@ def update_document(file_path, message):
 
 if __name__ == "__main__":
     commit_message = sys.argv[1] if len(sys.argv) > 1 else "No commit message"
-    file_path = "https://github.com/Omkar-Ghongade/Move-It-With-Aptos/blob/main/demo.docx"
+    file_path = "demo.docx"
     
     if os.path.exists(file_path):
         update_document(file_path, commit_message)
