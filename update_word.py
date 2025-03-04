@@ -13,7 +13,7 @@ def main():
         sys.exit(1)
     
     commit_message = sys.argv[1]
-    doc_path = "./demo.docx"  # explicitly use relative path
+    doc_path = os.path.join(os.getcwd(), "demo.docx")
 
     # Check if the file exists and print its size
     if not os.path.exists(doc_path):
