@@ -14,7 +14,7 @@ export default function App() {
     async function fetchBalance() {
       try {
         const balanceResponse = await window.fewcha.getBalance();
-        // console.log('Balance:', balanceResponse);
+        console.log('Balance:', balanceResponse);
         if(balanceResponse.data !== undefined) 
           setBalance(balanceResponse.data);
       } catch (error) {
