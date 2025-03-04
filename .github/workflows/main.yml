@@ -1,0 +1,38 @@
+name: Update Word Document
+
+on:
+  push:
+    branches: [ main ]  # adjust if you want to run on different branches
+
+jobs:
+  update-document:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install python-docx
+
+      - name: Update Word Document
+        run: |
+          # Run your Python script and pass the commit message as an argument
+          python update_word.py "${{ github.event.head_commit.message }}"
+
+      - name: Commit updated document
+        run: |
+          # Configure Git
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          # Add the updated document (update the path if necessary)
+          git add demo.docx
+          # Commit the changes with a message that includes the commit message
+          git commit -m "Update document with commit message: ${{ github.event.head_commit.message }}"
+          git push
