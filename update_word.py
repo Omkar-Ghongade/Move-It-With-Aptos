@@ -13,7 +13,7 @@ def update_document(file_path, message):
 
 if __name__ == "__main__":
     commit_message = sys.argv[1] if len(sys.argv) > 1 else "No commit message"
-    file_path = "demo.docx"
+    file_path = "https://github.com/Omkar-Ghongade/Move-It-With-Aptos/blob/main/demo.docx"
     
     if os.path.exists(file_path):
         update_document(file_path, commit_message)
