@@ -8,7 +8,7 @@ def main():
         sys.exit(1)
     
     commit_message = sys.argv[1]
-    doc_path = "demo.docx"  # Update if your docx is located elsewhere
+    doc_path = "./demo.docx"  # Update if your docx is located elsewhere
 
     try:
         # Open the existing Word document
