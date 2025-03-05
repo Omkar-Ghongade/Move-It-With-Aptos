@@ -23,7 +23,7 @@ def generate_documentation():
 def generate_with_gemini():
     # Placeholder for actual Gemini API interaction
     # This should be replaced with the actual API call to generate documentation
-    return "New documentation generated using Gemini."
+    return "New documentation generated using Geminiiiiii."
 
 if __name__ == "__main__":
     generate_documentation()
