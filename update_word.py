@@ -1,5 +1,4 @@
 import os
-import requests
 
 def generate_documentation():
     # Load existing documentation from docs.md if it exists

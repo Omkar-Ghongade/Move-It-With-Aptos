@@ -26,7 +26,6 @@ jobs:
       - name: Generate Documentation
         run: |
           # Install necessary packages (e.g., Gemini API client if needed)
-          pip install gemini-api-client
 
           # Run your Python script to generate documentation
           # This script should use Gemini for LLMs and update demo.md
