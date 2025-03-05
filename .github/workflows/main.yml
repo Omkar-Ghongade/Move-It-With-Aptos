@@ -2,7 +2,8 @@ name: Update Markdown Document
 
 on:
   push:
-    branches: [ main ]  # Adjust if you want to run on different branches
+    branches:
+      - release # Adjust if your release branch is named differently
 
 jobs:
   update-document:
@@ -11,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # To access previous commits
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -20,10 +23,15 @@ jobs:
       - name: List repository files
         run: ls -la
 
-      - name: Update Markdown Document
+      - name: Generate Documentation
         run: |
-          # Run your Python script and pass the commit message as an argument
-          python update_word.py "${{ github.event.head_commit.message }}"
+          # Install necessary packages (e.g., Gemini API client if needed)
+          pip install gemini-api-client
+
+          # Run your Python script to generate documentation
+          # This script should use Gemini for LLMs and update demo.md
+          # It should also check if docs.md exists and incorporate its content
+          python generate_documentation.py
 
       - name: Commit updated document
         run: |
@@ -32,7 +40,10 @@ jobs:
           git config user.name "omkar_ghongade"
           # Add the updated Markdown file (update the path if necessary)
           git add demo.md
-          # Commit the changes with a message that includes the commit message
-          git commit -m "Update document with commit message: ${{ github.event.head_commit.message }}"
+          # Commit the changes with a message
+          git commit -m "Update document with new changes"
           git push
 
+      - name: Check for previous commit message
+        run: |
+          echo "Previous commit message: ${{ github.event.head_commit.message }}"

@@ -1,22 +1,30 @@
-import sys
 import os
+import requests
 
-def update_document(file_path, message):
-    try:
-        print(f"Opening {file_path} to update with message: {message}")
-        # Open the Markdown file in append mode with UTF-8 encoding.
-        with open(file_path, "a", encoding="utf-8") as file:
-            # Append a new section for the commit message.
-            file.write(f"\n\n## Latest Commit Message\n{message}\n")
-        print(f"Updated {file_path} with message: {message}")
-    except Exception as e:
-        print(f"Error updating document {file_path}: {e}")
+def generate_documentation():
+    # Load existing documentation from docs.md if it exists
+    if os.path.exists('docs.md'):
+        with open('docs.md', 'r') as file:
+            existing_docs = file.read()
+    else:
+        existing_docs = ""
+
+    # Use Gemini API to generate new documentation
+    # This part requires actual integration with Gemini's API, which may involve authentication and specific request formats
+    # For demonstration purposes, assume we have a function `generate_with_gemini()` that returns new documentation
+    new_docs = generate_with_gemini()
+
+    # Combine existing and new documentation
+    combined_docs = existing_docs + "\n\n" + new_docs
+
+    # Write the combined documentation to demo.md
+    with open('demo.md', 'w') as file:
+        file.write(combined_docs)
+
+def generate_with_gemini():
+    # Placeholder for actual Gemini API interaction
+    # This should be replaced with the actual API call to generate documentation
+    return "New documentation generated using Gemini."
 
 if __name__ == "__main__":
-    commit_message = sys.argv[1] if len(sys.argv) > 1 else "No commit message"
-    file_path = "demo.md"  # Now using a Markdown file
-    
-    if os.path.exists(file_path):
-        update_document(file_path, commit_message)
-    else:
-        print(f"File {file_path} does not exist.")
+    generate_documentation()
