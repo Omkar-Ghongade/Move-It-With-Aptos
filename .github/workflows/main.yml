@@ -1,8 +1,8 @@
-name: Update Word Document
+name: Update Markdown Document
 
 on:
   push:
-    branches: [ main ]  # adjust if you want to run on different branches
+    branches: [ main ]  # Adjust if you want to run on different branches
 
 jobs:
   update-document:
@@ -17,15 +17,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          pip install python-docx
-          
       - name: List repository files
         run: ls -la
 
-
-      - name: Update Word Document
+      - name: Update Markdown Document
         run: |
           # Run your Python script and pass the commit message as an argument
           python update_word.py "${{ github.event.head_commit.message }}"
@@ -35,8 +30,8 @@ jobs:
           # Configure Git
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          # Add the updated document (update the path if necessary)
-          git add demo.docx
+          # Add the updated Markdown file (update the path if necessary)
+          git add demo.md
           # Commit the changes with a message that includes the commit message
           git commit -m "Update document with commit message: ${{ github.event.head_commit.message }}"
           git push
