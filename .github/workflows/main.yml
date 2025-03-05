@@ -35,3 +35,4 @@ jobs:
           # Commit the changes with a message that includes the commit message
           git commit -m "Update document with commit message: ${{ github.event.head_commit.message }}"
           git push
+
