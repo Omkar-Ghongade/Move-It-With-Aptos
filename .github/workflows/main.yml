@@ -30,7 +30,7 @@ jobs:
           # Run your Python script to generate documentation
           # This script should use Gemini for LLMs and update demo.md
           # It should also check if docs.md exists and incorporate its content
-          python generate_documentation.py
+          python update_word.py
 
       - name: Commit updated document
         run: |
