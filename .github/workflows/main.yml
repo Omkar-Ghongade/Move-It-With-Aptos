@@ -28,8 +28,8 @@ jobs:
       - name: Commit updated document
         run: |
           # Configure Git
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
+          git config user.email "omkarsubhashghongade21@gmail.com"
+          git config user.name "omkar_ghongade"
           # Add the updated Markdown file (update the path if necessary)
           git add demo.md
           # Commit the changes with a message that includes the commit message
