@@ -3,20 +3,24 @@ import subprocess
 from google import genai
 
 # Load API key from environment variable
-API_KEY = "AIzaSyBVa5aFWnrXrKXREtn11bvsN0wQrMmUO-8"
+API_KEY = os.environ["GEMINI_API_KEY"]
 
 # Initialize Gemini client
 client = genai.Client(api_key=API_KEY)
 
 # Function to get changes from the merge
 def get_merge_changes(pr_number):
-    # Use GitHub CLI to get the merge commit hash
-    merge_commit_hash = subprocess.check_output(f"gh pr view {pr_number} --json mergeCommit --jq '.mergeCommit.sha'", shell=True).decode().strip()
-    
-    # Use Git to get the changes introduced by the merge
-    changes = subprocess.check_output(f"git diff -U0 {merge_commit_hash}^ {merge_commit_hash}", shell=True).decode()
-    
-    return changes
+    try:
+        # Use GitHub CLI to get the merge commit hash
+        merge_commit_hash = subprocess.check_output(f"gh pr view {pr_number} --json mergeCommit --jq '.mergeCommit.sha'", shell=True).decode().strip()
+        
+        # Use Git to get the changes introduced by the merge
+        changes = subprocess.check_output(f"git diff -U0 {merge_commit_hash}^ {merge_commit_hash}", shell=True).decode()
+        
+        return changes
+    except subprocess.CalledProcessError as e:
+        print(f"Error fetching merge changes: {e}")
+        return ""
 
 # Function to generate documentation for new code
 def generate_documentation(changes, pr_title, pr_body):

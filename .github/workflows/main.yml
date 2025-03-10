@@ -11,6 +11,9 @@ on:
 jobs:
   update-document:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
 
     steps:
       - name: Checkout repository
@@ -26,7 +29,16 @@ jobs:
       - name: List repository files
         run: ls -la
 
+      - name: Setup GitHub CLI
+        uses: actions4gh/setup-gh@v1
+        with:
+          gh-version: latest
+          token: ${{ secrets.TOKEN }}
+
       - name: Generate Documentation
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           # Install necessary packages (e.g., Gemini API client if needed)
           pip install google-genai
