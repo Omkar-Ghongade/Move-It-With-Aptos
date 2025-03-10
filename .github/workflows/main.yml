@@ -28,8 +28,11 @@ jobs:
         run: ls -la
 
       - name: Generate Documentation
+        env:
+          API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           # Install necessary packages (e.g., Gemini API client if needed)
+          pip install google-genai
 
           # Run your Python script to generate documentation
           # This script should use Gemini for LLMs and update demo.md
