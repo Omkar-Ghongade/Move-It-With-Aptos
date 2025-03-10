@@ -8,9 +8,6 @@ on:
 jobs:
   update-document:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
 
     steps:
       - name: Checkout repository
@@ -27,16 +24,13 @@ jobs:
         run: ls -la
 
       - name: Generate Documentation
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           # Install necessary packages (e.g., Gemini API client if needed)
-          pip install google-genai
 
           # Run your Python script to generate documentation
           # This script should use Gemini for LLMs and update demo.md
-          python update_word.py "${{ github.event.pull_request.number }}" "${{ github.event.pull_request.title }}" "${{ github.event.pull_request.body }}"
+          # It should also check if docs.md exists and incorporate its content
+          python update_word.py
 
       - name: Commit updated document
         run: |
