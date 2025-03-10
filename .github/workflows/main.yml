@@ -3,7 +3,11 @@ name: Update Markdown Document
 on:
   push:
     branches:
-      - release # Adjust if your release branch is named differently
+      - release
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   update-document:
@@ -13,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # To access previous commits
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v2
