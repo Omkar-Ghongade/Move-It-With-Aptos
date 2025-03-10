@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - release # Adjust if your release branch is named differently
-  pull_request:
-    branches:
-      - release # Adjust if your release branch is named differently
 
 jobs:
   update-document:
