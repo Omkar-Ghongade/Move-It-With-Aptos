@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - release # Adjust if your release branch is named differently
+  pull_request:
+    branches:
+      - release # Adjust if your release branch is named differently
 
 jobs:
   update-document:
@@ -26,11 +29,11 @@ jobs:
       - name: Generate Documentation
         run: |
           # Install necessary packages (e.g., Gemini API client if needed)
+          pip install google-genai
 
           # Run your Python script to generate documentation
           # This script should use Gemini for LLMs and update demo.md
-          # It should also check if docs.md exists and incorporate its content
-          python update_word.py
+          python update_word.py "${{ github.event.pull_request.number }}" "${{ github.event.pull_request.title }}" "${{ github.event.pull_request.body }}"
 
       - name: Commit updated document
         run: |

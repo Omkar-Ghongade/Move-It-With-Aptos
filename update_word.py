@@ -1,29 +1,46 @@
 import os
+import subprocess
+from google import genai
 
-def generate_documentation():
-    # Load existing documentation from docs.md if it exists
-    if os.path.exists('docs.md'):
-        with open('docs.md', 'r') as file:
-            existing_docs = file.read()
-    else:
-        existing_docs = ""
+# Load API key from environment variable
+API_KEY = "AIzaSyBVa5aFWnrXrKXREtn11bvsN0wQrMmUO-8"
 
-    # Use Gemini API to generate new documentation
-    # This part requires actual integration with Gemini's API, which may involve authentication and specific request formats
-    # For demonstration purposes, assume we have a function `generate_with_gemini()` that returns new documentation
-    new_docs = generate_with_gemini()
+# Initialize Gemini client
+client = genai.Client(api_key=API_KEY)
 
-    # Combine existing and new documentation
-    combined_docs = existing_docs + "\n\n" + new_docs
+# Function to get changes from the merge
+def get_merge_changes(pr_number):
+    # Use GitHub CLI to get the merge commit hash
+    merge_commit_hash = subprocess.check_output(f"gh pr view {pr_number} --json mergeCommit --jq '.mergeCommit.sha'", shell=True).decode().strip()
+    
+    # Use Git to get the changes introduced by the merge
+    changes = subprocess.check_output(f"git diff -U0 {merge_commit_hash}^ {merge_commit_hash}", shell=True).decode()
+    
+    return changes
 
-    # Write the combined documentation to demo.md
-    with open('demo.md', 'w') as file:
-        file.write(combined_docs)
-
-def generate_with_gemini():
-    # Placeholder for actual Gemini API interaction
-    # This should be replaced with the actual API call to generate documentation
-    return "New documentation generated using Geminiiiiii."
+# Function to generate documentation for new code
+def generate_documentation(changes, pr_title, pr_body):
+    # Prompt for generating documentation
+    prompt = f"Generate documentation for the new code changes:\n\n{changes}\n\nBased on the existing documentation and the pull request details:\n\nTitle: {pr_title}\n\nBody: {pr_body}"
+    
+    # Use Gemini to generate documentation
+    response = client.models.generate_content(
+        model='gemini-2.0-flash',
+        contents=prompt
+    )
+    
+    # Save the generated documentation to demo.md
+    with open("demo.md", "w") as file:
+        file.write(response.text)
 
 if __name__ == "__main__":
-    generate_documentation()
+    import sys
+    if len(sys.argv) > 3:
+        pr_number = sys.argv[1]
+        pr_title = sys.argv[2]
+        pr_body = sys.argv[3]
+        
+        changes = get_merge_changes(pr_number)
+        generate_documentation(changes, pr_title, pr_body)
+    else:
+        print("Please provide pull request number, title, and body.")
