@@ -6,7 +6,7 @@ def get_new_changes():
     try:
         print("In Changes")
         # Use Git to get the changes introduced by the latest commit
-        changes = subprocess.check_output(f"git diff --unified=0 HEAD", shell=True).decode()
+        changes = subprocess.check_output(f"git diff --unified=0 HEAD~", shell=True).decode()
         
         return changes
     except subprocess.CalledProcessError as e:
