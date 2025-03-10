@@ -4,27 +4,36 @@ from google import genai
 
 API_KEY = os.environ["API_KEY"]
 
-
 def get_new_changes(existing_docs):
     try:
         client = genai.Client(api_key=API_KEY)
-        changes = subprocess.check_output(f"git diff --unified=0 HEAD~ HEAD", shell=True).decode()
+        changes = subprocess.check_output("git diff --unified=0 HEAD~ HEAD", shell=True).decode()
+
         if existing_docs == "No existing documentation found.":
-            prompt = "Generate documentation for the new code in this repository. The documentation should include the following sections: 1. Introduction 2. Installation 3. Usage 4. Examples 5. API Reference 6. Contributing 7. License"
-            prompt+= changes
-            response = client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=prompt
+            prompt = (
+                "Generate clear and concise documentation for the new code changes in this repository.\n\n"
+                "- Format the documentation in Markdown (.md) style.\n"
+                "- Do **not** add unnecessary sections like installation, usage, examples, or contributing unless relevant.\n"
+                "- Keep it **concise, relevant, and structured**.\n"
+                "- Focus on explaining the purpose, functionality, and key details of the code changes.\n\n"
+                "New code changes:\n"
             )
-            return response.text
         else:
-            prompt = "Update the documentation for the new code in this repository. The documentation should include the following sections: 1. Introduction 2. Installation 3. Usage 4. Examples 5. API Reference 6. Contributing 7. License"
-            prompt+= changes
-            response = client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=prompt
+            prompt = (
+                "Update the existing Markdown (.md) documentation to reflect the latest code changes.\n\n"
+                "- Do **not** add redundant sections like installation, usage, examples, or anything unnecessary.\n"
+                "- Keep the update **concise and structured**.\n"
+                "- Clearly document the new modifications, functions, or improvements without adding irrelevant content.\n\n"
+                "New code changes:\n"
+                f"{changes}"
             )
-            return response.text
+
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
+        return response.text
+
     except subprocess.CalledProcessError as e:
         print(f"Error fetching new changes: {e}")
         return ""
