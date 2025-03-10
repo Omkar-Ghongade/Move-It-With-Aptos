@@ -33,6 +33,7 @@ export default function App() {
         <Route path="/arena" element={<Arena />} />
         <Route path="/deck" element={<Deck />} />
         <Route path="/pokefortune" element={<Pokefortune/>} />
+        <Route path="/pokegames" element={<Pokegames/>} />
       </Routes>
     </BrowserRouter>
   );
