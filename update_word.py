@@ -6,7 +6,7 @@ from google import genai
 
 def getExistingDocs():
     try:
-        with open("docs.md", "r") as file:
+        with open("demo.md", "r") as file:
             print(file.read())
             return file.read()
     except FileNotFoundError:
