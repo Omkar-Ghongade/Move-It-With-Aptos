@@ -32,6 +32,8 @@ jobs:
           API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           pip install google-genai
+          pip install sentence-transformers
+          pip install numpy
 
           python update_word.py
 
